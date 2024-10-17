@@ -11,11 +11,16 @@
 #include "../include/glm/glm.hpp"
 #include "object.hpp"
 
-class Robot : public Object {
-public:
-    Robot();
+using vec3 = glm::vec3;
 
-    std::vector<std::shared_ptr<Object>> objects;
+struct Robot : public Object {
+    Robot(float h = 0.5f,
+          vec3 t = {1, 1.5, 0.8},
+          vec3 uas = {0.6, 0.3, 0.3},
+          vec3 las = {0.6, 0.3, 0.3},
+          vec3 uls = {0.3, 0.6, 0.3},
+          vec3 lls = {0.3, 0.6, 0.3});
+
     std::shared_ptr<Sphere> head;
 
     std::shared_ptr<Box> torso,
@@ -24,10 +29,17 @@ public:
         upperLeftLeg, lowerLeftLeg,
         upperRightLeg, lowerRightLeg;
 
-    void childDraw() override;
-    void toggleWireframe();
+    std::shared_ptr<Object> upperRightArmRotatePoint, lowerRightArmRotatePoint;
+    std::shared_ptr<Object> upperLeftArmRotatePoint, lowerLeftArmRotatePoint;
+    std::shared_ptr<Object> upperRightLegRotatePoint, lowerRightLegRotatePoint;
+    std::shared_ptr<Object> upperLeftLegRotatePoint, lowerLeftLegRotatePoint;
 
-    glm::vec3 color = {0.2, 0.4, 0.78};
+    void render() override;
+
+    vec3 color = {0.2, 0.4, 0.78};
+
+    float headSize;
+    vec3 torsoSize, upperArmSize, lowerArmSize, upperLegSize, lowerLegSize;
 };
 
 #endif

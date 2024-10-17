@@ -7,15 +7,22 @@
 #include <iostream>
 #include <memory>
 
+using vec3 = glm::vec3;
+
 // Base Class for rendered objects in the world
-class Object {
-public:
+struct Object {
     Object() = default;
 
-    void superDraw();
-    virtual void childDraw() = 0;
+    void draw();
+    virtual void render();
 
-    void parentTo(std::shared_ptr<Object> p);
+    void addChild(std::shared_ptr<Object> c);
+    void addChildren(std::vector<std::shared_ptr<Object>> c);
+
+    // Propagates down child tree
+    void setColor(glm::vec3 c);
+    void setWireframe(bool w);
+    void toggleWireframe();
 
     glm::vec3 position;
     glm::vec3 rotation;
@@ -25,24 +32,28 @@ public:
     bool wireframe = false;
 
     std::shared_ptr<Object> parent;
+    std::vector<std::shared_ptr<Object>> children;
+};
+
+enum Objects {
+    ROBOT,
+    DOG
 };
 
 /////////////////////////////////////////////////////////
 //
-/// Rendered box
+/// Rendered Box
 //
 /////////////////////////////////////////////////////////
-class Box : public Object {
-public:
-    Box(double scalar) : s(scalar) {
+struct Box : public Object {
+    Box(double scalar = 1) : size(scalar) {
     }
 
-    void childDraw() override {
-        wireframe ? glutWireCube(s) : glutSolidCube(s);
+    void render() override {
+        wireframe ? glutWireCube(size) : glutSolidCube(size);
     }
 
-private:
-    double s;
+    double size;
 };
 
 /////////////////////////////////////////////////////////
@@ -50,16 +61,14 @@ private:
 /// Rendered Sphere
 //
 /////////////////////////////////////////////////////////
-class Sphere : public Object {
-public:
-    Sphere(double radius, int slices, int stacks) : m_radius(radius), m_slices(slices), m_stacks(stacks) {
+struct Sphere : public Object {
+    Sphere(double radius = 0.5, int slices = 10, int stacks = 20) : radius(radius), slices(slices), stacks(stacks) {
     }
 
-    void childDraw() override {
-        wireframe ? glutWireSphere(m_radius, m_slices, m_stacks) : glutSolidSphere(m_radius, m_slices, m_stacks);
+    void render() override {
+        wireframe ? glutWireSphere(radius, slices, stacks) : glutSolidSphere(radius, slices, stacks);
     }
 
-private:
-    double m_radius;
-    int m_slices, m_stacks;
+    double radius;
+    int slices, stacks;
 };

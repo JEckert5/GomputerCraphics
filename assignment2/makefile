@@ -1,5 +1,5 @@
 
-FILES = ./assignment2/main.cpp ./assignment2/object.cpp ./assignment2/robot.cpp
+FILES = ./assignment2/main.cpp ./assignment2/object.cpp ./assignment2/robot.cpp ./assignment2/dog.cpp
 INCLUDES = -I ./assignment2/headers -I ./assignment2/include
 OPTIONS = -D GL_SILENCE_DEPRECATION -g -std=c++20 -lglut -rpath @executable_path/ -framework OpenGL
 
